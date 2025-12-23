@@ -1,17 +1,19 @@
 import { IconButton } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const LeftNav = () => (
+const LeftNav = ({ className }) => (
   <IconButton
-    className="swiper-button-prev-custom"
+    className={className}
     sx={{
       position: "absolute",
-      left: -16,
-      top: "40%",
+      left: 0,
+      top: "45%",
       zIndex: 10,
-      backgroundColor: "#121212",
+      backgroundColor: "#34C94B",
       color: "white",
-      "&:hover": { backgroundColor: "#1e1e1e" },
+      width: 36,
+      height: 36,
+      "&:hover": { backgroundColor: "#2da843" },
     }}
   >
     <ChevronLeftIcon />

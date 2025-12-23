@@ -9,40 +9,40 @@ import {
 } from "@mui/material";
 import { Colors } from "../Color";
 
-const AlbumCard = ({ album }) => {
+const AlbumCard = ({ album, type = "album" }) => {
+  console.log("album --- ",album);
+  
+  const chipLabel =
+    type === "song"
+      ? `${album.likes} Likes`
+      : `${album.follows} Follows`;
+
   return (
     <Card
-    sx={{
-      width: 160,
-      minWidth: 160, // 🔑 required for sliding
-      borderRadius: "10px",
-      overflow: "hidden",
-      cursor: "pointer",
-    }}
+      sx={{
+        width: 160,
+        minWidth: 160,
+        borderRadius: "10px",
+        overflow: "hidden",
+        cursor: "pointer",
+      }}
     >
-      {/* Image Section */}
       <Box sx={{ height: 140 }}>
         <CardMedia
           component="img"
           image={album.image}
           alt={album.title}
-          sx={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-          }}
+          sx={{ height: "100%", objectFit: "cover" }}
         />
       </Box>
 
-      {/* Bottom Section */}
-      <CardContent sx={{ p: 1 }}>
+      <CardContent sx={{ height:60,p:1 }}>
         <Chip
-          label={`${album.follows} Follows`}
+          label={chipLabel}
           size="small"
           sx={{
-            backgroundColor: Colors.primary_black,
-            color: Colors.white,
-            fontSize: "12px",
+            backgroundColor: "#121212",
+            color: "white",
             mb: 1,
           }}
         />
@@ -50,8 +50,7 @@ const AlbumCard = ({ album }) => {
         <Typography
           variant="body2"
           sx={{
-            color: Colors.white,
-            fontWeight: 500,
+            color: "white",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -63,5 +62,6 @@ const AlbumCard = ({ album }) => {
     </Card>
   );
 };
+
 
 export default AlbumCard;
