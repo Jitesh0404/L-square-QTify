@@ -4,30 +4,28 @@ import {
   CardMedia,
   CardContent,
   Chip,
+  Typography,
   Box,
 } from "@mui/material";
-import heroHeadPhones from "../../../assets/hero_headphones.png";
 import { Colors } from "../Color";
 
-const AlbumCard = () => {
+const AlbumCard = ({ album }) => {
   return (
     <Card
       sx={{
         width: 160,
-        height: 205,
-        borderRadius: 2,
+        borderRadius: "10px",
         overflow: "hidden",
         cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
+        backgroundColor: Colors.black,
       }}
     >
       {/* Image Section */}
-      <Box sx={{ height: 150 }}>
+      <Box sx={{ height: 140 }}>
         <CardMedia
           component="img"
-          image={heroHeadPhones}
-          alt="Album cover"
+          image={album.image}
+          alt={album.title}
           sx={{
             height: "100%",
             width: "100%",
@@ -37,21 +35,30 @@ const AlbumCard = () => {
       </Box>
 
       {/* Bottom Section */}
-      <CardContent
-        sx={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <CardContent sx={{ p: 1 }}>
         <Chip
-          label="100 Followers"
-          size="medium"
+          label={`${album.follows} Follows`}
+          size="small"
           sx={{
             backgroundColor: Colors.primary_black,
             color: Colors.white,
+            fontSize: "12px",
+            mb: 1,
           }}
         />
+
+        <Typography
+          variant="body2"
+          sx={{
+            color: Colors.white,
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {album.title}
+        </Typography>
       </CardContent>
     </Card>
   );

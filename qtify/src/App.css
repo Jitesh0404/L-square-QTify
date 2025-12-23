@@ -20,4 +20,5 @@ body{
     --color-black:#121212;
     --color-white:#FFFFFF;
     --font-family: 'Poppins-SemiBold' ,sans-serif;
+    background-color: var(--color-black);
 }
