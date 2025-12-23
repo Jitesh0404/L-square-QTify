@@ -1,18 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Typography, Button, IconButton } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Box, Typography, Button } from "@mui/material";
+import Carousel from "../Carousel/Carousel";
 import { BASE_URL } from "../../Backend";
 import AlbumCard from "../card/AlbumCard";
 
-
-const CARD_WIDTH = 184; // card + gap
-const SLIDE_COUNT = 4;  // cards per click
-
-const Section = ({ title, endpoint, showToggle = false }) => {
+const Section = ({ title, endpoint }) => {
   const [albums, setAlbums] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-  const sliderRef = useRef(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     axios.get(`${BASE_URL}${endpoint}`).then((res) => {
@@ -20,22 +15,8 @@ const Section = ({ title, endpoint, showToggle = false }) => {
     });
   }, []);
 
-  const slideLeft = () => {
-    sliderRef.current.scrollBy({
-      left: -CARD_WIDTH * SLIDE_COUNT,
-      behavior: "smooth",
-    });
-  };
-
-  const slideRight = () => {
-    sliderRef.current.scrollBy({
-      left: CARD_WIDTH * SLIDE_COUNT,
-      behavior: "smooth",
-    });
-  };
-
   return (
-    <Box sx={{ px: 4, py: 3, position: "relative" }}>
+    <Box sx={{ px: 4, py: 3 }}>
       {/* Header */}
       <Box
         sx={{
@@ -49,72 +30,27 @@ const Section = ({ title, endpoint, showToggle = false }) => {
           {title}
         </Typography>
 
-        {showToggle && (
-          <Button
-            onClick={() => setShowAll(!showAll)}
-            sx={{
-              color: "#34C94B",
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            {showAll ? "Collapse" : "Show all"}
-          </Button>
-        )}
+        <Button
+          onClick={() => setCollapsed(!collapsed)}
+          sx={{ color: "#34C94B", textTransform: "none", fontWeight: 600 }}
+        >
+          {collapsed ? "Show All" : "Collapse"}
+        </Button>
       </Box>
 
-      {/* Carousel */}
-      {!showAll && (
-        <>
-          {/* Left Button */}
-          <IconButton
-            onClick={slideLeft}
-            sx={{
-              position: "absolute",
-              left: 8,
-              top: "55%",
-              zIndex: 10,
-              backgroundColor: "#121212",
-              color: "white",
-              "&:hover": { backgroundColor: "#1e1e1e" },
-            }}
-          >
-            <ChevronLeft />
-          </IconButton>
-
-          {/* Right Button */}
-          <IconButton
-            onClick={slideRight}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: "55%",
-              zIndex: 10,
-              backgroundColor: "#121212",
-              color: "white",
-              "&:hover": { backgroundColor: "#1e1e1e" },
-            }}
-          >
-            <ChevronRight />
-          </IconButton>
-        </>
+      {/* Conditional Rendering */}
+      {collapsed ? (
+        <Carousel
+          items={albums}
+          renderItem={(album) => <AlbumCard album={album} />}
+        />
+      ) : (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+          {albums.map((album) => (
+            <AlbumCard key={album.id} album={album} />
+          ))}
+        </Box>
       )}
-
-      {/* Cards */}
-      <Box
-        ref={sliderRef}
-        sx={{
-          display: "flex",
-          gap: "24px",
-          overflowX: showAll ? "visible" : "hidden",
-          flexWrap: showAll ? "wrap" : "nowrap",
-          scrollBehavior: "smooth",
-        }}
-      >
-        {albums.map((album) => (
-          <AlbumCard key={album.id} album={album} />
-        ))}
-      </Box>
     </Box>
   );
 };
