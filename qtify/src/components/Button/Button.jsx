@@ -1,13 +1,12 @@
-import { Typography } from '@mui/material'
-import React from 'react'
-import styles from './Button.module.css'
+import React from "react";
+import styles from "./Button.module.css";
 
-function Button({ children }) {
+function Button({ children, type = "button", ...rest }) {
   return (
-    <Typography variant="button" className={styles.button}>
-        {children}
-    </Typography>
-  )
+    <button type={type} className={styles.button} {...rest}>
+      {children}
+    </button>
+  );
 }
 
-export default Button
+export default Button;
