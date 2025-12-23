@@ -13,6 +13,7 @@ export default function Home() {
       <Section
         title="Top Albums"
         endpoint="/albums/top"
+        showToggle
       />
 
       {/* New Albums */}
