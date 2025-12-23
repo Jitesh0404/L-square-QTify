@@ -9,9 +9,17 @@ export default function Home() {
       <Navbar />
       <Hero />
 
+      {/* Top Albums */}
       <Section
         title="Top Albums"
         endpoint="/albums/top"
+      />
+
+      {/* New Albums */}
+      <Section
+        title="New Albums"
+        endpoint="/albums/new"
+        showToggle
       />
     </>
   );

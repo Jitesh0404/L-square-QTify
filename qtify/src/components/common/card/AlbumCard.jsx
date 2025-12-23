@@ -12,13 +12,13 @@ import { Colors } from "../Color";
 const AlbumCard = ({ album }) => {
   return (
     <Card
-      sx={{
-        width: 160,
-        borderRadius: "10px",
-        overflow: "hidden",
-        cursor: "pointer",
-        backgroundColor: Colors.black,
-      }}
+    sx={{
+      width: 160,
+      minWidth: 160, // 🔑 required for sliding
+      borderRadius: "10px",
+      overflow: "hidden",
+      cursor: "pointer",
+    }}
     >
       {/* Image Section */}
       <Box sx={{ height: 140 }}>

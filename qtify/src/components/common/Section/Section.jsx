@@ -1,28 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Box, Typography, Button } from "@mui/material";
-import AlbumCard from "../card/AlbumCard";
+import { Box, Typography, Button, IconButton } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { BASE_URL } from "../../Backend";
+import AlbumCard from "../card/AlbumCard";
 
-const Section = ({ title, endpoint }) => {
-  const [data, setData] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}${endpoint}`);
-      setData(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+const CARD_WIDTH = 184; // card + gap
+const SLIDE_COUNT = 4;  // cards per click
+
+const Section = ({ title, endpoint, showToggle = false }) => {
+  const [albums, setAlbums] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  const sliderRef = useRef(null);
 
   useEffect(() => {
-    fetchData();
+    axios.get(`${BASE_URL}${endpoint}`).then((res) => {
+      setAlbums(res.data);
+    });
   }, []);
 
+  const slideLeft = () => {
+    sliderRef.current.scrollBy({
+      left: -CARD_WIDTH * SLIDE_COUNT,
+      behavior: "smooth",
+    });
+  };
+
+  const slideRight = () => {
+    sliderRef.current.scrollBy({
+      left: CARD_WIDTH * SLIDE_COUNT,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <Box sx={{ px: 4, py: 3 }}>
+    <Box sx={{ px: 4, py: 3, position: "relative" }}>
       {/* Header */}
       <Box
         sx={{
@@ -36,32 +49,72 @@ const Section = ({ title, endpoint }) => {
           {title}
         </Typography>
 
-        <Button
-          onClick={() => setCollapsed(!collapsed)}
-          sx={{
-            color: "#34C94B",
-            textTransform: "none",
-            fontWeight: 600,
-          }}
-        >
-          {collapsed ? "Show All" : "Collapse"}
-        </Button>
+        {showToggle && (
+          <Button
+            onClick={() => setShowAll(!showAll)}
+            sx={{
+              color: "#34C94B",
+              textTransform: "none",
+              fontWeight: 600,
+            }}
+          >
+            {showAll ? "Collapse" : "Show all"}
+          </Button>
+        )}
       </Box>
 
-      {/* Grid */}
-      {!collapsed && (
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "24px",
-          }}
-        >
-          {data.map((album) => (
-            <AlbumCard key={album.id} album={album} />
-          ))}
-        </Box>
+      {/* Carousel */}
+      {!showAll && (
+        <>
+          {/* Left Button */}
+          <IconButton
+            onClick={slideLeft}
+            sx={{
+              position: "absolute",
+              left: 8,
+              top: "55%",
+              zIndex: 10,
+              backgroundColor: "#121212",
+              color: "white",
+              "&:hover": { backgroundColor: "#1e1e1e" },
+            }}
+          >
+            <ChevronLeft />
+          </IconButton>
+
+          {/* Right Button */}
+          <IconButton
+            onClick={slideRight}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: "55%",
+              zIndex: 10,
+              backgroundColor: "#121212",
+              color: "white",
+              "&:hover": { backgroundColor: "#1e1e1e" },
+            }}
+          >
+            <ChevronRight />
+          </IconButton>
+        </>
       )}
+
+      {/* Cards */}
+      <Box
+        ref={sliderRef}
+        sx={{
+          display: "flex",
+          gap: "24px",
+          overflowX: showAll ? "visible" : "hidden",
+          flexWrap: showAll ? "wrap" : "nowrap",
+          scrollBehavior: "smooth",
+        }}
+      >
+        {albums.map((album) => (
+          <AlbumCard key={album.id} album={album} />
+        ))}
+      </Box>
     </Box>
   );
 };
